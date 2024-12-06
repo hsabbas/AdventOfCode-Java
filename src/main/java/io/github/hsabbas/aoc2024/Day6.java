@@ -3,7 +3,6 @@ package io.github.hsabbas.aoc2024;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
-import java.util.Arrays;
 
 public class Day6 {
     public static void main(String[] args) throws IOException{
@@ -11,85 +10,74 @@ public class Day6 {
     }
 
     private static void solve() throws IOException{
-        String[][] grid;
+        char[][] grid;
         try (BufferedReader reader = new BufferedReader(new FileReader("C:/AdventOfCode2024/Day6/input.txt"))){
-            grid = reader.lines().map(line -> line.split("")).toArray(String[][]::new);
+            grid = reader.lines().map(String::toCharArray).toArray(char[][]::new);
         }
-        String direction = "U";
-        int[] guard = new int[2];
+        char direction = 'U';
+        Position guard = new Position();
         for(int row = 0; row < grid.length; row++) {
             for(int col = 0; col < grid[row].length; col++) {
-                if(grid[row][col].equals("^")) {
-                    guard[0] = row;
-                    guard[1] = col;
-                    grid[row][col] += direction;
+                if(grid[row][col] == '^') {
+                    guard.y = row;
+                    guard.x = col;
+                    grid[row][col] = direction;
                 }
             }
         }
+        
         int total = 1;
-        int total2 = 0;
 
         while (inBounds(grid, guard)) {
-            while (inBounds(grid, guard) && !grid[guard[0]][guard[1]].equals("#")) {
-                if(grid[guard[0]][guard[1]].equals(".")){
-                    total++;
-                    grid[guard[0]][guard[1]] += direction;
-                }
-
-                int[] loopCheck = {guard[0], guard[1]};
-                String checkDirection = getRightTurn(direction);
-                moveGuard(loopCheck, checkDirection);
-                while(inBounds(grid, loopCheck) && !grid[loopCheck[0]][loopCheck[1]].equals("#")){
-                    if(grid[loopCheck[0]][loopCheck[1]].contains(checkDirection)){
-                        total2++;
-                        break;
-                    }
-                    moveGuard(loopCheck, checkDirection);
-                }
-
-                moveGuard(guard, direction);
+            if(grid[guard.y][guard.x] == '.'){
+                total++;
+                grid[guard.y][guard.x] = direction;
             }
 
-            if(!inBounds(grid, guard)){
+            Position next = getNextPosition(guard, direction);
+            if(!inBounds(grid, next)){
                 break;
             }
-
-            if(grid[guard[0]][guard[1]].equals("#")) {
-                moveGuard(guard, getRightTurn(getRightTurn(direction)));
+            if(grid[next.y][next.x] == '#'){
                 direction = getRightTurn(direction);
+                next = getNextPosition(guard, direction);
             }
+
+            guard = next;
         }
         System.out.println(total);
-        System.out.println(total2);
     }
 
-    private static void moveGuard(int[] guard, String direction) {
-        switch (direction) {
-            case "U":
-                guard[0]--;
-                break;
-            case "R":
-                guard[1]++;
-                break;
-            case "D":
-                guard[0]++;
-                break;
-            case "L":
-                guard[1]--;
-                break;
-        }
-    }
-
-    private static String getRightTurn(String direction){
+    private static Position getNextPosition(Position position, char direction){
         return switch (direction) {
-            case "U" -> "R";
-            case "R" -> "D";
-            case "D" -> "L";
-            default -> "U";
+            case 'U' -> new Position(position.x, position.y - 1);
+            case 'R' -> new Position(position.x + 1, position.y);
+            case 'D' -> new Position(position.x, position.y + 1);
+            default -> new Position(position.x - 1, position.y);
         };
     }
 
-    private static boolean inBounds(String [][] grid, int[] guard) {
-        return guard[0] >= 0 && guard[0] < grid.length && guard[1] >= 0 && guard[1] < grid[guard[0]].length;
+    private static char getRightTurn(char direction){
+        return switch (direction) {
+            case 'U' -> 'R';
+            case 'R' -> 'D';
+            case 'D' -> 'L';
+            default -> 'U';
+        };
+    }
+
+    private static boolean inBounds(char[][] grid, Position guard) {
+        return guard.y >= 0 && guard.y < grid.length && guard.x >= 0 && guard.x < grid[guard.y].length;
+    }
+}
+
+class Position{
+    public int x = 0, y = 0;
+
+    public Position() {}
+
+    public Position(int x, int y) {
+        this.x = x;
+        this.y = y;
     }
 }
