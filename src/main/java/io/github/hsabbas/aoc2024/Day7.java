@@ -59,7 +59,11 @@ public class Day7 {
     }
 
     private static long concatNums(long num1, Long num2) {
-        return Long.parseLong(num1 + String.valueOf(num2));
+        int pow = 1;
+        while(num2 % (long)Math.pow(10, pow) != num2){
+            pow++;
+        }
+        return (long) (num1 * Math.pow(10, pow) + num2);
     }
 
 }
