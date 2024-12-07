@@ -17,8 +17,6 @@ public class Day7 {
             equations = reader.lines().map(line -> Arrays.stream(line.split(":? ")).map(Long::parseLong).toList()).toList();
         }
 
-        System.out.println(concatNums(1234L, 4321L));
-
         long total = 0;
         long total2 = 0;
         for(List<Long> equation : equations) {
