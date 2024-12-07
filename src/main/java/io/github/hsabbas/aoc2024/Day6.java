@@ -58,7 +58,7 @@ public class Day6 {
 
         for(Position obstacle : visited) {
             grid[obstacle.y][obstacle.x] = '#';
-            Position testGuard = new Position(start.x, start.y);
+            Position testGuard = start;
             direction = 'U';
             Set<PosAndDir> path = new HashSet<>();
             while(inBounds(grid, testGuard)){
