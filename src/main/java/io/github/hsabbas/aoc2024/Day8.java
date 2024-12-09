@@ -21,15 +21,15 @@ public class Day8 {
         }
 
         Map<Character, List<Coords>> frequencies = new HashMap<>();
-        for(int row = 0; row < grid.length; row++) {
-            for(int col = 0; col < grid[row].length; col++) {
-                if(grid[row][col] == '.'){
+        for(int y = 0; y < grid.length; y++) {
+            for(int x = 0; x < grid[y].length; x++) {
+                if(grid[y][x] == '.'){
                     continue;
                 }
-                if(!frequencies.containsKey(grid[row][col])) {
-                    frequencies.put(grid[row][col], new ArrayList<>());
+                if(!frequencies.containsKey(grid[y][x])) {
+                    frequencies.put(grid[y][x], new ArrayList<>());
                 }
-                frequencies.get(grid[row][col]).add(new Coords(col, row));
+                frequencies.get(grid[y][x]).add(new Coords(x, y));
             }
         }
 
@@ -41,14 +41,16 @@ public class Day8 {
                 for(int j = i + 1; j < positions.size(); j++) {
                     Coords second = positions.get(j);
                     Coords distance = new Coords(first.x - second.x, first.y - second.y);
-                    Coords test1 = new Coords(second.x - distance.x, second.y - distance.y);
-                    if(inBounds(grid, test1) && grid[test1.y][test1.x] != '#'){
-                        grid[test1.y][test1.x] = '#';
+
+                    Coords inline = new Coords(second.x - distance.x, second.y - distance.y);
+                    if(inBounds(grid, inline) && grid[inline.y][inline.x] != '#'){
+                        grid[inline.y][inline.x] = '#';
                         partOne++;
                     }
-                    Coords test2 = new Coords(first.x + distance.x, first.y + distance.y);
-                    if(inBounds(grid, test2) && grid[test2.y][test2.x] != '#'){
-                        grid[test2.y][test2.x] = '#';
+
+                    inline = new Coords(first.x + distance.x, first.y + distance.y);
+                    if(inBounds(grid, inline) && grid[inline.y][inline.x] != '#'){
+                        grid[inline.y][inline.x] = '#';
                         partOne++;
                     }
                 }
@@ -72,21 +74,23 @@ public class Day8 {
                         partTwo++;
                     }
                     Coords distance = new Coords(first.x - second.x, first.y - second.y);
-                    Coords test1 = new Coords(second.x - distance.x, second.y - distance.y);
-                    while(inBounds(grid, test1)){
-                        if(grid[test1.y][test1.x] != '#'){
-                            grid[test1.y][test1.x] = '#';
+
+                    Coords inline = new Coords(second.x - distance.x, second.y - distance.y);
+                    while(inBounds(grid, inline)){
+                        if(grid[inline.y][inline.x] != '#'){
+                            grid[inline.y][inline.x] = '#';
                             partTwo++;
                         }
-                        test1 = new Coords(test1.x - distance.x, test1.y - distance.y);
+                        inline = new Coords(inline.x - distance.x, inline.y - distance.y);
                     }
-                    Coords test2 = new Coords(first.x + distance.x, first.y + distance.y);
-                    while(inBounds(grid, test2)){
-                        if(grid[test2.y][test2.x] != '#'){
-                            grid[test2.y][test2.x] = '#';
+
+                    inline = new Coords(first.x + distance.x, first.y + distance.y);
+                    while(inBounds(grid, inline)){
+                        if(grid[inline.y][inline.x] != '#'){
+                            grid[inline.y][inline.x] = '#';
                             partTwo++;
                         }
-                        test2 = new Coords(test2.x + distance.x, test2.y + distance.y);
+                        inline = new Coords(inline.x + distance.x, inline.y + distance.y);
                     }
                 }
             }
