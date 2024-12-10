@@ -72,14 +72,14 @@ public class Day10 {
         for(int row = 0; row < grid.length; row++) {
             for(int col = 0; col < grid[row].length; col++) {
                 if(grid[row][col] == '0') {
-                    totalRating += rateTrailHead(grid, new Coords(col, row), '0', new HashSet<>());
+                    totalRating += rateTrailHead(grid, new Coords(col, row), '0');
                 }
             }
         }
         System.out.println(totalRating);
     }
 
-    private static int rateTrailHead(char[][] grid, Coords currPos, char curr, HashSet<Coords> currPath) {
+    private static int rateTrailHead(char[][] grid, Coords currPos, char curr) {
         if(curr == '9') {
             return 1;
         }
@@ -87,38 +87,26 @@ public class Day10 {
         int rating = 0;
         Coords nextPosition = new Coords(currPos.x + 1, currPos.y);
         if(inBounds(grid, nextPosition)
-                && !currPath.contains(nextPosition)
                 && grid[nextPosition.y][nextPosition.x] == curr + 1){
-            currPath.add(nextPosition);
-            rating += rateTrailHead(grid, nextPosition, (char) (curr + 1), currPath);
-            currPath.remove(nextPosition);
+            rating += rateTrailHead(grid, nextPosition, (char) (curr + 1));
         }
 
         nextPosition = new Coords(currPos.x, currPos.y + 1);
         if(inBounds(grid, nextPosition)
-                && !currPath.contains(nextPosition)
                 && grid[nextPosition.y][nextPosition.x] == curr + 1){
-            currPath.add(nextPosition);
-            rating += rateTrailHead(grid, nextPosition, (char) (curr + 1), currPath);
-            currPath.remove(nextPosition);
+            rating += rateTrailHead(grid, nextPosition, (char) (curr + 1));
         }
 
         nextPosition = new Coords(currPos.x - 1, currPos.y);
         if(inBounds(grid, nextPosition)
-                && !currPath.contains(nextPosition)
                 && grid[nextPosition.y][nextPosition.x] == curr + 1){
-            currPath.add(nextPosition);
-            rating += rateTrailHead(grid, nextPosition, (char) (curr + 1), currPath);
-            currPath.remove(nextPosition);
+            rating += rateTrailHead(grid, nextPosition, (char) (curr + 1));
         }
 
         nextPosition = new Coords(currPos.x, currPos.y - 1);
         if(inBounds(grid, nextPosition)
-                && !currPath.contains(nextPosition)
                 && grid[nextPosition.y][nextPosition.x] == curr + 1){
-            currPath.add(nextPosition);
-            rating += rateTrailHead(grid, nextPosition, (char) (curr + 1), currPath);
-            currPath.remove(nextPosition);
+            rating += rateTrailHead(grid, nextPosition, (char) (curr + 1));
         }
         return rating;
     }
