@@ -209,8 +209,8 @@ public class Day15 {
     //for debugging
     private static void printGrid(char[][] grid) {
         for (char[] chars : grid) {
-            for (char aChar : chars) {
-                System.out.print(aChar);
+            for (char c : chars) {
+                System.out.print(c);
             }
             System.out.println();
         }
