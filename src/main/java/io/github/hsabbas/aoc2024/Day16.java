@@ -1,13 +1,16 @@
 package io.github.hsabbas.aoc2024;
 
+import io.github.hsabbas.aoc2024.common.Coords;
+
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.*;
 
+import static io.github.hsabbas.aoc2024.common.CoordsUtil.move;
+
 public class Day16 {
     static int[][] directions = new int[][]{{1, 0}, {0, 1}, {-1, 0}, {0, -1}};
-    record Coords(int x, int y) {}
     record Step(Coords coords, int direction) {}
     public static void main(String[] args) throws IOException {
         char[][] grid;
@@ -56,7 +59,7 @@ public class Day16 {
                                   int best,
                                   Map<Step, Integer> memo,
                                   List<Set<Coords>> bestPaths) {
-        if(grid[reindeer.y][reindeer.x] == 'E') {
+        if(grid[reindeer.y()][reindeer.x()] == 'E') {
             if(sum == best) {
                 Set<Coords> bestPath = new HashSet<>(currPath);
                 bestPaths.add(bestPath);
@@ -77,7 +80,7 @@ public class Day16 {
         int min = Integer.MAX_VALUE;
         for(int i = 0; i < directions.length; i++) {
             Coords next = move(reindeer, directions[i]);
-            if(currPath.contains(next) || grid[next.y][next.x] == '#') {
+            if(currPath.contains(next) || grid[next.y()][next.x()] == '#') {
                 continue;
             }
 
@@ -106,9 +109,5 @@ public class Day16 {
         }
 
         return min;
-    }
-
-    private static Coords move(Coords object, int[] direction) {
-        return new Coords(object.x + direction[0], object.y + direction[1]);
     }
 }

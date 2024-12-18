@@ -51,6 +51,8 @@ public class Day13 {
         System.out.println(total);
     }
 
+    // Treat the buttons and the prize location as a system of linear equations
+    // and solve using substitution method.
     private static long findCost(Vec2 prize, Vec2 moveA, Vec2 moveB) {
         long bNumerator = prize.y * moveA.x - prize.x * moveA.y;
         long bDenominator = moveA.x * moveB.y - moveA.y * moveB.x;

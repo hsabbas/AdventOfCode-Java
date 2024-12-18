@@ -1,13 +1,16 @@
 package io.github.hsabbas.aoc2024;
 
+import io.github.hsabbas.aoc2024.common.Coords;
+
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.HashSet;
 import java.util.Set;
 
+import static io.github.hsabbas.aoc2024.common.CoordsUtil.inBounds;
+
 public class Day10 {
-    record Coords(int x, int y) {}
     public static void main(String[] args) throws IOException {
         char[][] grid;
         try (BufferedReader reader = new BufferedReader(new FileReader("C:/AdventOfCode2024/Day10/input.txt"))){
@@ -37,31 +40,31 @@ public class Day10 {
         }
 
         int score = 0;
-        Coords nextPosition = new Coords(currPos.x + 1, currPos.y);
+        Coords nextPosition = new Coords(currPos.x() + 1, currPos.y());
         if(inBounds(grid, nextPosition)
                 && !visited.contains(nextPosition)
-                && grid[nextPosition.y][nextPosition.x] == curr + 1){
+                && grid[nextPosition.y()][nextPosition.x()] == curr + 1){
             score += scoreTrailHead(grid, nextPosition, (char) (curr + 1), visited);
         }
 
-        nextPosition = new Coords(currPos.x, currPos.y + 1);
+        nextPosition = new Coords(currPos.x(), currPos.y() + 1);
         if(inBounds(grid, nextPosition)
                 && !visited.contains(nextPosition)
-                && grid[nextPosition.y][nextPosition.x] == curr + 1){
+                && grid[nextPosition.y()][nextPosition.x()] == curr + 1){
             score += scoreTrailHead(grid, nextPosition, (char) (curr + 1), visited);
         }
 
-        nextPosition = new Coords(currPos.x - 1, currPos.y);
+        nextPosition = new Coords(currPos.x() - 1, currPos.y());
         if(inBounds(grid, nextPosition)
                 && !visited.contains(nextPosition)
-                && grid[nextPosition.y][nextPosition.x] == curr + 1){
+                && grid[nextPosition.y()][nextPosition.x()] == curr + 1){
             score += scoreTrailHead(grid, nextPosition, (char) (curr + 1), visited);
         }
 
-        nextPosition = new Coords(currPos.x, currPos.y - 1);
+        nextPosition = new Coords(currPos.x(), currPos.y() - 1);
         if(inBounds(grid, nextPosition)
                 && !visited.contains(nextPosition)
-                && grid[nextPosition.y][nextPosition.x] == curr + 1){
+                && grid[nextPosition.y()][nextPosition.x()] == curr + 1){
             score += scoreTrailHead(grid, nextPosition, (char) (curr + 1), visited);
         }
         return score;
@@ -85,33 +88,29 @@ public class Day10 {
         }
 
         int rating = 0;
-        Coords nextPosition = new Coords(currPos.x + 1, currPos.y);
+        Coords nextPosition = new Coords(currPos.x() + 1, currPos.y());
         if(inBounds(grid, nextPosition)
-                && grid[nextPosition.y][nextPosition.x] == curr + 1){
+                && grid[nextPosition.y()][nextPosition.x()] == curr + 1){
             rating += rateTrailHead(grid, nextPosition, (char) (curr + 1));
         }
 
-        nextPosition = new Coords(currPos.x, currPos.y + 1);
+        nextPosition = new Coords(currPos.x(), currPos.y() + 1);
         if(inBounds(grid, nextPosition)
-                && grid[nextPosition.y][nextPosition.x] == curr + 1){
+                && grid[nextPosition.y()][nextPosition.x()] == curr + 1){
             rating += rateTrailHead(grid, nextPosition, (char) (curr + 1));
         }
 
-        nextPosition = new Coords(currPos.x - 1, currPos.y);
+        nextPosition = new Coords(currPos.x() - 1, currPos.y());
         if(inBounds(grid, nextPosition)
-                && grid[nextPosition.y][nextPosition.x] == curr + 1){
+                && grid[nextPosition.y()][nextPosition.x()] == curr + 1){
             rating += rateTrailHead(grid, nextPosition, (char) (curr + 1));
         }
 
-        nextPosition = new Coords(currPos.x, currPos.y - 1);
+        nextPosition = new Coords(currPos.x(), currPos.y() - 1);
         if(inBounds(grid, nextPosition)
-                && grid[nextPosition.y][nextPosition.x] == curr + 1){
+                && grid[nextPosition.y()][nextPosition.x()] == curr + 1){
             rating += rateTrailHead(grid, nextPosition, (char) (curr + 1));
         }
         return rating;
-    }
-
-    private static boolean inBounds(char[][] grid, Coords position) {
-        return position.y >= 0 && position.y < grid.length && position.x >= 0 && position.x < grid[position.y].length;
     }
 }

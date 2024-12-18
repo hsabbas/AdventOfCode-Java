@@ -1,5 +1,7 @@
 package io.github.hsabbas.aoc2024;
 
+import io.github.hsabbas.aoc2024.common.Coords;
+
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
@@ -8,9 +10,10 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import static io.github.hsabbas.aoc2024.common.CoordsUtil.directions;
+import static io.github.hsabbas.aoc2024.common.CoordsUtil.inBounds;
+
 public class Day12 {
-    record Coords(int x, int y) {}
-    static int[][] directions = new int[][]{{-1, 0}, {1, 0}, {0, -1}, {0, 1}};
     public static void main(String[] args) throws IOException {
         char[][] grid;
         try (BufferedReader reader = new BufferedReader(new FileReader("C:/AdventOfCode2024/Day12/input.txt"))){
@@ -44,7 +47,7 @@ public class Day12 {
         for(Coords plot : region) {
             perimeter += 4;
             for(int[] direction : directions) {
-                Coords next = new Coords(plot.x + direction[0], plot.y + direction[1]);
+                Coords next = new Coords(plot.x() + direction[0], plot.y() + direction[1]);
                 if (region.contains(next)) {
                     perimeter--;
                 }
@@ -63,14 +66,14 @@ public class Day12 {
 
     private static int countCorners(Set<Coords> region, Coords plot) {
         int corners = 0;
-        Coords topLeft = new Coords(plot.x - 1, plot.y - 1);
-        Coords top = new Coords(plot.x, plot.y - 1);
-        Coords left = new Coords(plot.x - 1, plot.y);
-        Coords topRight = new Coords(plot.x + 1, plot.y - 1);
-        Coords right = new Coords(plot.x + 1, plot.y);
-        Coords bottomLeft = new Coords(plot.x - 1, plot.y + 1);
-        Coords bottom = new Coords(plot.x, plot.y + 1);
-        Coords bottomRight = new Coords(plot.x + 1, plot.y + 1);
+        Coords topLeft = new Coords(plot.x() - 1, plot.y() - 1);
+        Coords top = new Coords(plot.x(), plot.y() - 1);
+        Coords left = new Coords(plot.x() - 1, plot.y());
+        Coords topRight = new Coords(plot.x() + 1, plot.y() - 1);
+        Coords right = new Coords(plot.x() + 1, plot.y());
+        Coords bottomLeft = new Coords(plot.x() - 1, plot.y() + 1);
+        Coords bottom = new Coords(plot.x(), plot.y() + 1);
+        Coords bottomRight = new Coords(plot.x() + 1, plot.y() + 1);
 
         if(!region.contains(topLeft) && (region.contains(top) && region.contains(left))){
             corners++;
@@ -120,17 +123,13 @@ public class Day12 {
         region.add(coords);
         visited.add(coords);
         for(int[] direction : directions) {
-            Coords next = new Coords(coords.x + direction[0], coords.y + direction[1]);
+            Coords next = new Coords(coords.x() + direction[0], coords.y() + direction[1]);
             if(visited.contains(next)){
                 continue;
             }
-            if(inBounds(grid, next) && grid[next.y][next.x] == grid[coords.y][coords.x]){
+            if(inBounds(grid, next) && grid[next.y()][next.x()] == grid[coords.y()][coords.x()]){
                 fillRegion(grid, next, region, visited);
             }
         }
-    }
-
-    private static boolean inBounds(char[][] grid, Coords position) {
-        return position.y >= 0 && position.y < grid.length && position.x >= 0 && position.x < grid[position.y].length;
     }
 }

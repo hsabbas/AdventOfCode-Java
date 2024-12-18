@@ -1,11 +1,14 @@
 package io.github.hsabbas.aoc2024;
 
+import io.github.hsabbas.aoc2024.common.Coords;
+
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.*;
 
+import static io.github.hsabbas.aoc2024.common.CoordsUtil.inBounds;
+
 public class Day15 {
-    record Coords(int x, int y) {}
     public static void main(String[] args) throws FileNotFoundException {
         Scanner scanner = new Scanner(new File("C:/AdventOfCode2024/Day15/input.txt"));
         String line = scanner.nextLine();
@@ -60,26 +63,26 @@ public class Day15 {
         for(int i = 0; i < instructions.length(); i++) {
             char direction = instructions.charAt(i);
             Coords next = moveObject(robot, direction);
-            if(grid[next.y][next.x] == '.') {
+            if(grid[next.y()][next.x()] == '.') {
                 robot = next;
                 continue;
             }
-            if(grid[next.y][next.x] == '#'){
+            if(grid[next.y()][next.x()] == '#'){
                 continue;
             }
 
             int boxes = 0;
-            while(grid[next.y][next.x] == 'O'){
-                grid[next.y][next.x] = '.';
+            while(grid[next.y()][next.x()] == 'O'){
+                grid[next.y()][next.x()] = '.';
                 boxes++;
                 next = moveObject(next, direction);
             }
             direction = findReverse(direction);
-            if(grid[next.y][next.x] != '.') {
+            if(grid[next.y()][next.x()] != '.') {
                 next = moveObject(next, direction);
             }
             while(boxes > 0) {
-                grid[next.y][next.x] = 'O';
+                grid[next.y()][next.x()] = 'O';
                 boxes--;
                 next = moveObject(next, direction);
             }
@@ -102,50 +105,50 @@ public class Day15 {
         for(int i = 0; i < instructions.length(); i++) {
             char direction = instructions.charAt(i);
             Coords next = moveObject(robot, direction);
-            if(grid[next.y][next.x] == '.') {
+            if(grid[next.y()][next.x()] == '.') {
                 robot = next;
                 continue;
             }
-            if(grid[next.y][next.x] == '#'){
+            if(grid[next.y()][next.x()] == '#'){
                 continue;
             }
 
             int boxes = 0;
             if(direction == '<') {
-                while(inBounds(grid, next) && grid[next.y][next.x] == ']'){
+                while(inBounds(grid, next) && grid[next.y()][next.x()] == ']'){
                     boxes++;
-                    grid[next.y][next.x] = '.';
+                    grid[next.y()][next.x()] = '.';
                     next = moveObject(next, direction);
-                    grid[next.y][next.x] = '.';
+                    grid[next.y()][next.x()] = '.';
                     next = moveObject(next, direction);
                 }
                 direction = findReverse(direction);
-                if(grid[next.y][next.x] != '.') {
+                if(grid[next.y()][next.x()] != '.') {
                     next = moveObject(next, direction);
                 }
                 while (boxes > 0) {
-                    grid[next.y][next.x] = '[';
+                    grid[next.y()][next.x()] = '[';
                     next = moveObject(next, direction);
-                    grid[next.y][next.x] = ']';
+                    grid[next.y()][next.x()] = ']';
                     next = moveObject(next, direction);
                     boxes--;
                 }
             } else if(direction == '>') {
-                while(inBounds(grid, next) && grid[next.y][next.x] == '['){
+                while(inBounds(grid, next) && grid[next.y()][next.x()] == '['){
                     boxes++;
-                    grid[next.y][next.x] = '.';
+                    grid[next.y()][next.x()] = '.';
                     next = moveObject(next, direction);
-                    grid[next.y][next.x] = '.';
+                    grid[next.y()][next.x()] = '.';
                     next = moveObject(next, direction);
                 }
                 direction = findReverse(direction);
-                if(grid[next.y][next.x] != '.') {
+                if(grid[next.y()][next.x()] != '.') {
                     next = moveObject(next, direction);
                 }
                 while (boxes > 0) {
-                    grid[next.y][next.x] = ']';
+                    grid[next.y()][next.x()] = ']';
                     next = moveObject(next, direction);
-                    grid[next.y][next.x] = '[';
+                    grid[next.y()][next.x()] = '[';
                     next = moveObject(next, direction);
                     boxes--;
                 }
@@ -177,19 +180,19 @@ public class Day15 {
         Set<Coords> nextSpaces = new HashSet<>();
         for(Coords coords : moving) {
             Coords next = moveObject(coords, direction);
-            if(grid[next.y][next.x] == '#') {
+            if(grid[next.y()][next.x()] == '#') {
                 return false;
             }
-            if(grid[next.y][next.x] != '.') {
+            if(grid[next.y()][next.x()] != '.') {
                 freeAhead = false;
             }
-            if(grid[next.y][next.x] == '[') {
-                Coords rightHalf = new Coords(next.x + 1, next.y);
+            if(grid[next.y()][next.x()] == '[') {
+                Coords rightHalf = new Coords(next.x() + 1, next.y());
                 nextSpaces.add(rightHalf);
                 nextSpaces.add(next);
             }
-            if(grid[next.y][next.x] == ']') {
-                Coords leftHalf = new Coords(next.x - 1, next.y);
+            if(grid[next.y()][next.x()] == ']') {
+                Coords leftHalf = new Coords(next.x() - 1, next.y());
                 nextSpaces.add(leftHalf);
                 nextSpaces.add(next);
             }
@@ -198,30 +201,20 @@ public class Day15 {
         if(freeAhead || pushDoubleWidthBoxes(grid, nextSpaces, direction)) {
             for(Coords coords : moving) {
                 Coords next = moveObject(coords, direction);
-                grid[next.y][next.x] = grid[coords.y][coords.x];
-                grid[coords.y][coords.x] = '.';
+                grid[next.y()][next.x()] = grid[coords.y()][coords.x()];
+                grid[coords.y()][coords.x()] = '.';
             }
             return true;
         }
         return false;
     }
 
-    //for debugging
-    private static void printGrid(char[][] grid) {
-        for (char[] chars : grid) {
-            for (char c : chars) {
-                System.out.print(c);
-            }
-            System.out.println();
-        }
-    }
-
     private static Coords moveObject(Coords position, char dir) {
         return switch (dir) {
-            case '<' -> new Coords(position.x - 1, position.y);
-            case '^' -> new Coords(position.x, position.y - 1);
-            case '>' -> new Coords(position.x + 1, position.y);
-            case 'v' -> new Coords(position.x, position.y + 1);
+            case '<' -> new Coords(position.x() - 1, position.y());
+            case '^' -> new Coords(position.x(), position.y() - 1);
+            case '>' -> new Coords(position.x() + 1, position.y());
+            case 'v' -> new Coords(position.x(), position.y() + 1);
             default -> new Coords(0,0);
         };
     }
@@ -234,9 +227,5 @@ public class Day15 {
             case 'v' -> '^';
             default -> ' ';
         };
-    }
-
-    private static boolean inBounds(char[][] grid, Coords position) {
-        return position.y >= 0 && position.y < grid.length && position.x >= 0 && position.x < grid[position.y].length;
     }
 }
